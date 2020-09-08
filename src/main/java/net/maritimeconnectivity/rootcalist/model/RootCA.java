@@ -31,5 +31,5 @@ import java.util.Set;
 public class RootCA extends EntityModel {
 
     @OneToMany(mappedBy = "rootCA")
-    private Set<Signature> signatures;
+    private Set<Attestation> attestations;
 }

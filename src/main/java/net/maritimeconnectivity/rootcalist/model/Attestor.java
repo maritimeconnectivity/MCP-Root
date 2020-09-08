@@ -33,5 +33,5 @@ public class Attestor extends EntityModel {
 
     @OneToMany(mappedBy = "attestor")
     @JsonIgnore
-    private Set<Signature> signatures;
+    private Set<Attestation> attestations;
 }

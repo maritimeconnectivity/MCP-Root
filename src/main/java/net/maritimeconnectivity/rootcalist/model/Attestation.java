@@ -31,7 +31,7 @@ import javax.persistence.Table;
 @Table(name = "signature")
 @Getter
 @Setter
-public class Signature extends TimestampModel {
+public class Attestation extends TimestampModel {
 
     @ApiModelProperty(required = true)
     @Column(name = "signature", nullable = false)

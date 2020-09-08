@@ -32,7 +32,7 @@ CREATE TABLE `attestor` (
     UNIQUE (`name`)
 );
 
-CREATE TABLE `signature` (
+CREATE TABLE `attestation` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `id_root_ca` INT NOT NULL,
     `id_attestor` INT NOT NULL,
@@ -41,4 +41,17 @@ CREATE TABLE `signature` (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`id_root_ca`) REFERENCES root_ca(`id`),
     FOREIGN KEY (`id_attestor`) REFERENCES attestor(`id`)
+);
+
+CREATE TABLE `revocation` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `id_root_ca` INT NOT NULL,
+    `id_attestor` INT NOT NULL,
+    `id_attestation` INT NOT NULL,
+    `signature` MEDIUMTEXT NOT NULL,
+    `created_at` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`id_root_ca`) REFERENCES root_ca(`id`),
+    FOREIGN KEY (`id_attestor`) REFERENCES attestor(`id`),
+    FOREIGN KEY (`id_attestation`) REFERENCES attestation(`id`)
 );

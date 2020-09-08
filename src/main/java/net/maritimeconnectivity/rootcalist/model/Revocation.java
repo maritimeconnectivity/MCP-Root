@@ -14,15 +14,7 @@
  * limitations under the License.
  */
 
-package net.maritimeconnectivity.rootcalist.repositories;
+package net.maritimeconnectivity.rootcalist.model;
 
-import net.maritimeconnectivity.rootcalist.model.RootCA;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-
-public interface RootCARepository extends EntityRepository<RootCA> {
-
-    @Query("select r from RootCA r where r.id = (select s.rootCA.id from Attestation s where s.attestor.id = ?1)")
-    Page<RootCA> findByAttestor(Long attestorId, Pageable pageable);
+public class Revocation {
 }

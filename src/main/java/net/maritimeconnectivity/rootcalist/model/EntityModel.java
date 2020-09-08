@@ -39,5 +39,5 @@ public abstract class EntityModel extends TimestampModel {
     protected String certificate;
 
     @OneToMany
-    private Set<Signature> signatures;
+    private Set<Attestation> attestations;
 }
