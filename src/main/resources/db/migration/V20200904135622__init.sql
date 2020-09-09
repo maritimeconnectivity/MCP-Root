@@ -20,7 +20,8 @@ CREATE TABLE `root_ca` (
     `created_at` DATETIME NOT NULL,
     `certificate` MEDIUMTEXT NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE (`name`)
+    UNIQUE (`name`),
+    UNIQUE (`certificate`)
 );
 
 CREATE TABLE `attestor` (
@@ -29,7 +30,8 @@ CREATE TABLE `attestor` (
     `created_at` DATETIME NOT NULL,
     `certificate` MEDIUMTEXT NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE (`name`)
+    UNIQUE (`name`),
+    UNIQUE (`certificate`)
 );
 
 CREATE TABLE `attestation` (

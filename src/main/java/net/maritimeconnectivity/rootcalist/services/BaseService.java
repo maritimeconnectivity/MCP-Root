@@ -14,28 +14,17 @@
  * limitations under the License.
  */
 
-package net.maritimeconnectivity.rootcalist.model;
+package net.maritimeconnectivity.rootcalist.services;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.data.repository.CrudRepository;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.util.Set;
+public interface BaseService<T> {
 
-@Entity
-@Table(name = "attestor")
-@Getter
-@Setter
-public class Attestor extends EntityModel {
+    T getById(Long id);
 
-    @OneToMany(mappedBy = "attestor")
-    @JsonIgnore
-    private Set<Attestation> attestations;
+    T save(T entity);
 
-    @OneToMany(mappedBy = "attestor")
-    @JsonIgnore
-    private Set<Revocation> revocations;
+    void delete(Long id);
+
+    CrudRepository<T, Long> getRepository();
 }

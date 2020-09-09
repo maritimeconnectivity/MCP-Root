@@ -31,11 +31,11 @@ import java.util.Set;
 public abstract class EntityModel extends TimestampModel {
 
     @ApiModelProperty(value = "The name that identifies the entity", required = true)
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     protected String name;
 
     @ApiModelProperty(value = "The certificate of the entity", required = true)
-    @Column(name = "certificate", nullable = false)
+    @Column(name = "certificate", nullable = false, unique = true)
     protected String certificate;
 
     @OneToMany

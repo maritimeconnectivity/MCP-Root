@@ -20,9 +20,13 @@ import net.maritimeconnectivity.rootcalist.model.RootCA;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.Collection;
+import java.util.List;
 
 public interface RootCARepository extends EntityRepository<RootCA> {
 
-    @Query("select r from RootCA r where r.id = (select s.rootCA.id from Attestation s where s.attestor.id = ?1)")
-    Page<RootCA> findByAttestor(Long attestorId, Pageable pageable);
+    @Query("select r from RootCA r where r.id = (select s.rootCA.id from Attestation s where s.attestor.id in :attestorIds)")
+    List<RootCA> findByAttestor(Collection<Long> attestorIds);
 }

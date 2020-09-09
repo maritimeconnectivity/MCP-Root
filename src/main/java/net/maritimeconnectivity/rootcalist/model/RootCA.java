@@ -32,4 +32,7 @@ public class RootCA extends EntityModel {
 
     @OneToMany(mappedBy = "rootCA")
     private Set<Attestation> attestations;
+
+    @OneToMany(mappedBy = "rootCA")
+    private Set<Revocation> revocations;
 }

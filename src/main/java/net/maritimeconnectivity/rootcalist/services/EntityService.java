@@ -14,28 +14,9 @@
  * limitations under the License.
  */
 
-package net.maritimeconnectivity.rootcalist.model;
+package net.maritimeconnectivity.rootcalist.services;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+public interface EntityService<T> extends BaseService<T> {
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.util.Set;
 
-@Entity
-@Table(name = "attestor")
-@Getter
-@Setter
-public class Attestor extends EntityModel {
-
-    @OneToMany(mappedBy = "attestor")
-    @JsonIgnore
-    private Set<Attestation> attestations;
-
-    @OneToMany(mappedBy = "attestor")
-    @JsonIgnore
-    private Set<Revocation> revocations;
 }

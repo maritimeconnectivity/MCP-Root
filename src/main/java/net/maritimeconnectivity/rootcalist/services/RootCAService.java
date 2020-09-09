@@ -16,17 +16,13 @@
 
 package net.maritimeconnectivity.rootcalist.services;
 
-import net.maritimeconnectivity.rootcalist.repositories.RootCARepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import net.maritimeconnectivity.rootcalist.model.RootCA;
 
-@Service
-public class RootCAService {
+import java.util.List;
 
-    private RootCARepository rootCARepository;
+public interface RootCAService extends BaseService<RootCA> {
 
-    @Autowired
-    private void setRootCARepository(RootCARepository rootCARepository) {
-        this.rootCARepository = rootCARepository;
-    }
+    List<RootCA> listAll();
+
+    List<RootCA> listByAttestors(List<Long> attestorIds);
 }

@@ -28,7 +28,6 @@ import java.util.Date;
 
 @MappedSuperclass
 @Getter
-@Setter
 public abstract class TimestampModel implements JsonSerializable {
 
     @Id
