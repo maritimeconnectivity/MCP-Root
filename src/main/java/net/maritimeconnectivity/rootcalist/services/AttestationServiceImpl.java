@@ -16,30 +16,23 @@
 
 package net.maritimeconnectivity.rootcalist.services;
 
-import net.maritimeconnectivity.rootcalist.model.RootCA;
-import net.maritimeconnectivity.rootcalist.repositories.RootCARepository;
+import net.maritimeconnectivity.rootcalist.model.Attestation;
+import net.maritimeconnectivity.rootcalist.repositories.AttestationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class RootCAServiceImpl extends BaseServiceImpl<RootCA> implements RootCAService {
+public class AttestationServiceImpl extends BaseServiceImpl<Attestation> implements AttestationService {
 
-    private RootCARepository rootCARepository;
+    private AttestationRepository attestationRepository;
 
     @Autowired
-    private void setRootCARepository(RootCARepository rootCARepository) {
-        this.rootCARepository = rootCARepository;
+    public void setAttestationRepository(AttestationRepository attestationRepository) {
+        this.attestationRepository = attestationRepository;
     }
 
     @Override
-    public List<RootCA> listByAttestors(List<Long> attestorIds) {
-        return this.rootCARepository.findByAttestor(attestorIds);
-    }
-
-    @Override
-    public RootCARepository getRepository() {
-        return this.rootCARepository;
+    public AttestationRepository getRepository() {
+        return this.attestationRepository;
     }
 }

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package net.maritimeconnectivity.rootcalist.repositories;
+package net.maritimeconnectivity.rootcalist.services;
 
-import org.springframework.data.repository.PagingAndSortingRepository;
+import net.maritimeconnectivity.rootcalist.model.Attestor;
 
-public interface SignatureRepository extends PagingAndSortingRepository<SignatureRepository, Long> {
+public interface AttestorService extends BaseService<Attestor> {
 }

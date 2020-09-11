@@ -16,30 +16,23 @@
 
 package net.maritimeconnectivity.rootcalist.services;
 
-import net.maritimeconnectivity.rootcalist.model.RootCA;
-import net.maritimeconnectivity.rootcalist.repositories.RootCARepository;
+import net.maritimeconnectivity.rootcalist.model.Revocation;
+import net.maritimeconnectivity.rootcalist.repositories.RevocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class RootCAServiceImpl extends BaseServiceImpl<RootCA> implements RootCAService {
+public class RevocationServiceImpl extends BaseServiceImpl<Revocation> implements RevocationService {
 
-    private RootCARepository rootCARepository;
+    private RevocationRepository revocationRepository;
 
     @Autowired
-    private void setRootCARepository(RootCARepository rootCARepository) {
-        this.rootCARepository = rootCARepository;
+    public void setRevocationRepository(RevocationRepository revocationRepository) {
+        this.revocationRepository = revocationRepository;
     }
 
     @Override
-    public List<RootCA> listByAttestors(List<Long> attestorIds) {
-        return this.rootCARepository.findByAttestor(attestorIds);
-    }
-
-    @Override
-    public RootCARepository getRepository() {
-        return this.rootCARepository;
+    public RevocationRepository getRepository() {
+        return this.revocationRepository;
     }
 }

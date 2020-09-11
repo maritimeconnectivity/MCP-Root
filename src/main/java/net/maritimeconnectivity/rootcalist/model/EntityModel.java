@@ -22,8 +22,6 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
-import java.util.Set;
 
 @MappedSuperclass
 @Getter
@@ -37,7 +35,4 @@ public abstract class EntityModel extends TimestampModel {
     @ApiModelProperty(value = "The certificate of the entity", required = true)
     @Column(name = "certificate", nullable = false, unique = true)
     protected String certificate;
-
-    @OneToMany
-    private Set<Attestation> attestations;
 }

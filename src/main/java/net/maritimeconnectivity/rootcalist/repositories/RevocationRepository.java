@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package net.maritimeconnectivity.rootcalist.services;
+package net.maritimeconnectivity.rootcalist.repositories;
 
-import net.maritimeconnectivity.rootcalist.model.RootCA;
+import net.maritimeconnectivity.rootcalist.model.Revocation;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-import java.util.List;
-
-public interface RootCAService extends BaseService<RootCA> {
-
-    List<RootCA> listByAttestors(List<Long> attestorIds);
+public interface RevocationRepository extends PagingAndSortingRepository<Revocation, Long> {
 }

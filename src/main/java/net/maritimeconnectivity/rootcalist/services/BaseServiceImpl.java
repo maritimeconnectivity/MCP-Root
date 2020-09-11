@@ -20,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.maritimeconnectivity.rootcalist.model.TimestampModel;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -37,6 +39,11 @@ public abstract class BaseServiceImpl<T extends TimestampModel> implements BaseS
     public T save(T entity) {
         log.debug("Just saved entity");
         return getRepository().save(entity);
+    }
+
+    @Override
+    public List<T> listAll() {
+        return (ArrayList<T>) getRepository().findAll();
     }
 
     @Transactional

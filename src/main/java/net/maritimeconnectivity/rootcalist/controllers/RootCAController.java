@@ -29,10 +29,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,9 +54,8 @@ public class RootCAController {
         this.rootCAService = rootCAService;
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/roots",
-            method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<List<RootCA>> getRootCAs(@RequestParam(required = false, name = "attestorId") List<Long> attestorIds) {
@@ -65,9 +65,8 @@ public class RootCAController {
         return new ResponseEntity<>(this.rootCAService.listAll(), HttpStatus.OK);
     }
 
-    @RequestMapping(
+    @GetMapping(
             value = "/root/{id}",
-            method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<RootCA> getRootCA(@PathVariable Long id) {
@@ -78,9 +77,9 @@ public class RootCAController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(
+    @PostMapping(
             value = "/root",
-            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<RootCA> createRootCA(@RequestBody RootCA rootCA) {
@@ -92,12 +91,13 @@ public class RootCAController {
                 return new ResponseEntity<>(newRootCA, HttpStatus.OK);
             }
         } catch (IOException e) {
-            log.error("New root CA certificate could not be read");
+            log.error("New root CA certificate could not be parsed");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    // checks if the given certificate is self signed
     private boolean isSelfSigned(X509CertificateHolder certificateHolder) {
         if (certificateHolder.getSubject().equals(certificateHolder.getIssuer())) {
             JcaX509ContentVerifierProviderBuilder contentVerifierProviderBuilder = new JcaX509ContentVerifierProviderBuilder();

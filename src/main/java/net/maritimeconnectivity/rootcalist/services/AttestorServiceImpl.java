@@ -16,11 +16,23 @@
 
 package net.maritimeconnectivity.rootcalist.services;
 
-import net.maritimeconnectivity.rootcalist.model.RootCA;
+import net.maritimeconnectivity.rootcalist.model.Attestor;
+import net.maritimeconnectivity.rootcalist.repositories.AttestorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+@Service
+public class AttestorServiceImpl extends BaseServiceImpl<Attestor> implements AttestorService {
 
-public interface RootCAService extends BaseService<RootCA> {
+    private AttestorRepository attestorRepository;
 
-    List<RootCA> listByAttestors(List<Long> attestorIds);
+    @Autowired
+    public void setAttestorRepository(AttestorRepository attestorRepository) {
+        this.attestorRepository = attestorRepository;
+    }
+
+    @Override
+    public AttestorRepository getRepository() {
+        return this.attestorRepository;
+    }
 }

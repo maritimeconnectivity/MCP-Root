@@ -16,11 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.services;
 
-import net.maritimeconnectivity.rootcalist.model.RootCA;
+import net.maritimeconnectivity.rootcalist.model.Revocation;
 
-import java.util.List;
-
-public interface RootCAService extends BaseService<RootCA> {
-
-    List<RootCA> listByAttestors(List<Long> attestorIds);
+public interface RevocationService extends BaseService<Revocation> {
 }

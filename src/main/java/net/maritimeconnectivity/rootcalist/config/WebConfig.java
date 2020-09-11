@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package net.maritimeconnectivity.rootcalist.services;
+package net.maritimeconnectivity.rootcalist.config;
 
-import net.maritimeconnectivity.rootcalist.model.RootCA;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.util.List;
-
-public interface RootCAService extends BaseService<RootCA> {
-
-    List<RootCA> listByAttestors(List<Long> attestorIds);
+@Configuration
+@EnableWebMvc
+public class WebConfig {
 }

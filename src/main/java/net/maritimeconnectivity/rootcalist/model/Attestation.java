@@ -33,7 +33,10 @@ import javax.persistence.Table;
 @Setter
 public class Attestation extends TimestampModel {
 
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(
+            value = "HEX encoded signature made by signing the certificate of the root CA using the private key of the attestor",
+            required = true
+    )
     @Column(name = "signature", nullable = false)
     private String signature;
 

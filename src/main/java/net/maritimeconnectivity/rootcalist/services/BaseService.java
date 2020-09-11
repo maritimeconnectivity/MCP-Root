@@ -18,11 +18,15 @@ package net.maritimeconnectivity.rootcalist.services;
 
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
 public interface BaseService<T> {
 
     T getById(Long id);
 
     T save(T entity);
+
+    List<T> listAll();
 
     void delete(Long id);
 
