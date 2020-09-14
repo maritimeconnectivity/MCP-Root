@@ -19,6 +19,12 @@ package net.maritimeconnectivity.rootcalist.controllers;
 import lombok.extern.slf4j.Slf4j;
 import net.maritimeconnectivity.rootcalist.model.Attestor;
 import net.maritimeconnectivity.rootcalist.services.AttestorService;
+import net.maritimeconnectivity.rootcalist.utils.CertificateUtil;
+import org.bouncycastle.cert.CertException;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +36,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 
 @Slf4j
@@ -67,10 +75,39 @@ public class AttestorController {
 
     @PostMapping(
             value = "/attestor",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+            consumes = "application/pem-certificate-chain",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Attestor> createAttestor(@RequestBody Attestor attestor) {
+    public ResponseEntity<Attestor> createAttestor(@RequestBody String certChain) {
+        X509CertificateHolder[] certificateHolders;
+        try {
+            certificateHolders = CertificateUtil.extractCertificates(certChain);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Attestor attestor = new Attestor();
+        StringWriter stringWriter = new StringWriter();
+        PemWriter pemWriter = new PemWriter(stringWriter);
+        if (certificateHolders.length > 1) {
+            try {
+                CertificateUtil.verifyChain(certificateHolders);
+                pemWriter.writeObject(new PemObject("CERTIFICATE", certificateHolders[1].getEncoded()));
+                pemWriter.flush();
+                attestor.setIssuer(stringWriter.toString());
+                stringWriter.flush();
+            } catch (CertException | OperatorCreationException | IOException e) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        try {
+            pemWriter.writeObject(new PemObject("CERTIFICATE", certificateHolders[0].getEncoded()));
+            pemWriter.flush();
+            attestor.setCertificate(stringWriter.toString());
+            pemWriter.close();
+            stringWriter.flush();
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         Attestor newAttestor = this.attestorService.save(attestor);
         return new ResponseEntity<>(newAttestor, HttpStatus.OK);
     }

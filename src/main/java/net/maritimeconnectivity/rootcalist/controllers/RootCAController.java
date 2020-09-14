@@ -19,10 +19,14 @@ package net.maritimeconnectivity.rootcalist.controllers;
 import lombok.extern.slf4j.Slf4j;
 import net.maritimeconnectivity.rootcalist.model.RootCA;
 import net.maritimeconnectivity.rootcalist.services.RootCAService;
+import net.maritimeconnectivity.rootcalist.utils.CertificateUtil;
+import org.bouncycastle.asn1.x500.RDN;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
 import org.bouncycastle.cert.CertException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509ContentVerifierProviderBuilder;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,14 +83,20 @@ public class RootCAController {
 
     @PostMapping(
             value = "/root",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+            consumes = "application/x-pem-file",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<RootCA> createRootCA(@RequestBody RootCA rootCA) {
-        PEMParser pemParser = new PEMParser(new StringReader(rootCA.getCertificate()));
+    public ResponseEntity<RootCA> createRootCA(@RequestBody String rootCACert) {
+        PEMParser pemParser = new PEMParser(new StringReader(rootCACert));
         try {
             X509CertificateHolder certificateHolder = (X509CertificateHolder) pemParser.readObject();
-            if (certificateHolder.isValidOn(new Date()) && isSelfSigned(certificateHolder)) {
+            if (certificateHolder.isValidOn(new Date()) && CertificateUtil.isSelfSigned(certificateHolder)) {
+                RootCA rootCA = new RootCA();
+                rootCA.setCertificate(rootCACert);
+                X500Name x500Name = certificateHolder.getSubject();
+                RDN cn = x500Name.getRDNs(BCStyle.CN)[0];
+                String cnString = IETFUtils.valueToString(cn.getFirst().getValue());
+                rootCA.setName(cnString);
                 RootCA newRootCA = this.rootCAService.save(rootCA);
                 return new ResponseEntity<>(newRootCA, HttpStatus.OK);
             }
@@ -95,19 +105,5 @@ public class RootCAController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    // checks if the given certificate is self signed
-    private boolean isSelfSigned(X509CertificateHolder certificateHolder) {
-        if (certificateHolder.getSubject().equals(certificateHolder.getIssuer())) {
-            JcaX509ContentVerifierProviderBuilder contentVerifierProviderBuilder = new JcaX509ContentVerifierProviderBuilder();
-            contentVerifierProviderBuilder.setProvider(new BouncyCastleProvider());
-            try {
-                return certificateHolder.isSignatureValid(contentVerifierProviderBuilder.build(certificateHolder));
-            } catch (CertException | OperatorCreationException e) {
-                return false;
-            }
-        }
-        return false;
     }
 }
