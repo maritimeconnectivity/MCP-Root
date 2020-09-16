@@ -32,11 +32,18 @@ import javax.persistence.MappedSuperclass;
 public abstract class SignatureModel extends TimestampModel {
 
     @ApiModelProperty(
-            value = "PEM encoded CMS signed data",
+            value = "HEX encoded signature signed by private key of attestor",
             required = true
     )
     @Column(name = "signature", nullable = false)
     private String signature;
+
+    @ApiModelProperty(
+            value = "The identifier of the algorithm that was used to generate the signature",
+            required = true
+    )
+    @Column(name = "algorithm", nullable = false)
+    private String algorithmIdentifier;
 
     @ManyToOne
     @JoinColumn(name = "id_root_ca")
