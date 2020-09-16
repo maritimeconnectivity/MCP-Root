@@ -18,9 +18,18 @@ package net.maritimeconnectivity.rootcalist.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import net.maritimeconnectivity.rootcalist.model.Attestation;
+import net.maritimeconnectivity.rootcalist.model.Attestor;
+import net.maritimeconnectivity.rootcalist.model.RootCA;
 import net.maritimeconnectivity.rootcalist.services.AttestationService;
 import net.maritimeconnectivity.rootcalist.services.AttestorService;
 import net.maritimeconnectivity.rootcalist.services.RootCAService;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaX509ContentVerifierProviderBuilder;
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.cms.CMSSignedData;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.util.io.pem.PemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,6 +41,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -86,8 +98,28 @@ public class AttestationController {
     )
     public ResponseEntity<Attestation> createAttestation(@RequestBody Attestation input) {
         if (input.getAttestor() != null && input.getRootCA() != null) {
+            Attestor attestor = this.attestorService.getById(input.getAttestor().getId());
+            RootCA rootCA = this.rootCAService.getById(input.getRootCA().getId());
+            if (attestor != null && rootCA != null && input.getSignature() != null) {
 
+            }
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    private void verifySignature(String signature, Attestor signer, RootCA rootCA) throws IOException, CMSException, OperatorCreationException {
+        PemReader pemReader = new PemReader(new StringReader(signature));
+        byte[] rawSignature = pemReader.readPemObject().getContent();
+        CMSSignedData cmsSignedData = new CMSSignedData(rawSignature);
+        byte[] content = (byte[]) cmsSignedData.getSignedContent().getContent();
+        if (!Arrays.equals(content, rootCA.getCertificate().getBytes())) {
+            throw new CMSException("Certificate in CMS object does not correspond to certificate in database");
+        }
+        PEMParser pemParser = new PEMParser(new StringReader(signer.getCertificate()));
+        X509CertificateHolder signerCert = (X509CertificateHolder) pemParser.readObject();
+        pemParser.close();
+        JcaX509ContentVerifierProviderBuilder contentVerifierProviderBuilder = new JcaX509ContentVerifierProviderBuilder();
+        contentVerifierProviderBuilder.setProvider("BC");
+        cmsSignedData.verifySignatures(contentVerifierProviderBuilder.build(signerCert));
     }
 }

@@ -24,11 +24,8 @@ import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
-import org.bouncycastle.cert.CertException;
 import org.bouncycastle.cert.X509CertificateHolder;
-import org.bouncycastle.cert.jcajce.JcaX509ContentVerifierProviderBuilder;
 import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.operator.OperatorCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -90,6 +87,7 @@ public class RootCAController {
         PEMParser pemParser = new PEMParser(new StringReader(rootCACert));
         try {
             X509CertificateHolder certificateHolder = (X509CertificateHolder) pemParser.readObject();
+            pemParser.close();
             if (certificateHolder.isValidOn(new Date()) && CertificateUtil.isSelfSigned(certificateHolder)) {
                 RootCA rootCA = new RootCA();
                 rootCA.setCertificate(rootCACert);

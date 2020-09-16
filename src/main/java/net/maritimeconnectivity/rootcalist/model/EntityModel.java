@@ -32,7 +32,7 @@ public abstract class EntityModel extends TimestampModel {
     @Column(name = "name", nullable = false, unique = true)
     protected String name;
 
-    @ApiModelProperty(value = "The certificate of the entity", required = true)
+    @ApiModelProperty(value = "PEM encoded certificate of the entity", required = true)
     @Column(name = "certificate", nullable = false, unique = true)
     protected String certificate;
 }
