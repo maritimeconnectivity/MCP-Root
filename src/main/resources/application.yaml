@@ -1,10 +1,12 @@
 spring:
   datasource:
-    url: jdbc:mariadb://localhost/root-ca-list
+    #url: jdbc:mariadb://localhost/root-ca-list
+    url: jdbc:mysql://localhost/root-ca-list?serverTimezone=UTC
     #url: jdbc:h2:tcp://localhost/~/test;USER=sa;MODE=MySQL
-    driverClassName: org.mariadb.jdbc.Driver
+    #driverClassName: org.mariadb.jdbc.Driver
     username: dbuser
     password: dbuser
+    driver-class-name: com.mysql.cj.jdbc.Driver
   flyway:
     baseline-on-migrate: true
   jpa:

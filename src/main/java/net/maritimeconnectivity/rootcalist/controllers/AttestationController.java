@@ -51,8 +51,8 @@ import java.security.cert.X509Certificate;
 import java.util.List;
 
 @Slf4j
-@RequestMapping("/api")
 @RestController
+@RequestMapping("/api")
 public class AttestationController {
 
     private AttestationService attestationService;
