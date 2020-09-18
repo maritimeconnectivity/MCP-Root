@@ -19,7 +19,11 @@ package net.maritimeconnectivity.rootcalist.controllers;
 import lombok.extern.slf4j.Slf4j;
 import net.maritimeconnectivity.rootcalist.model.Attestor;
 import net.maritimeconnectivity.rootcalist.services.AttestorService;
-import net.maritimeconnectivity.rootcalist.utils.CertificateUtil;
+import net.maritimeconnectivity.rootcalist.utils.CryptoUtil;
+import org.bouncycastle.asn1.x500.RDN;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
 import org.bouncycastle.cert.CertException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.operator.OperatorCreationException;
@@ -81,7 +85,7 @@ public class AttestorController {
     public ResponseEntity<Attestor> createAttestor(@RequestBody String certChain) {
         X509CertificateHolder[] certificateHolders;
         try {
-            certificateHolders = CertificateUtil.extractCertificates(certChain);
+            certificateHolders = CryptoUtil.extractCertificates(certChain);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -90,7 +94,7 @@ public class AttestorController {
         PemWriter pemWriter = new PemWriter(stringWriter);
         if (certificateHolders.length > 1) {
             try {
-                CertificateUtil.verifyChain(certificateHolders);
+                CryptoUtil.verifyChain(certificateHolders);
                 pemWriter.writeObject(new PemObject("CERTIFICATE", certificateHolders[1].getEncoded()));
                 pemWriter.flush();
                 attestor.setIssuer(stringWriter.toString());
@@ -105,6 +109,10 @@ public class AttestorController {
             attestor.setCertificate(stringWriter.toString());
             pemWriter.close();
             stringWriter.flush();
+            X500Name x500Name = certificateHolders[0].getSubject();
+            RDN cn = x500Name.getRDNs(BCStyle.CN)[0];
+            String cnString = IETFUtils.valueToString(cn.getFirst().getValue());
+            attestor.setName(cnString);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

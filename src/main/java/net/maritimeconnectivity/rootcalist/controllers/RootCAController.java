@@ -19,7 +19,7 @@ package net.maritimeconnectivity.rootcalist.controllers;
 import lombok.extern.slf4j.Slf4j;
 import net.maritimeconnectivity.rootcalist.model.RootCA;
 import net.maritimeconnectivity.rootcalist.services.RootCAService;
-import net.maritimeconnectivity.rootcalist.utils.CertificateUtil;
+import net.maritimeconnectivity.rootcalist.utils.CryptoUtil;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -88,7 +88,7 @@ public class RootCAController {
         try {
             X509CertificateHolder certificateHolder = (X509CertificateHolder) pemParser.readObject();
             pemParser.close();
-            if (certificateHolder.isValidOn(new Date()) && CertificateUtil.isSelfSigned(certificateHolder)) {
+            if (certificateHolder.isValidOn(new Date()) && CryptoUtil.isSelfSigned(certificateHolder)) {
                 RootCA rootCA = new RootCA();
                 rootCA.setCertificate(rootCACert);
                 X500Name x500Name = certificateHolder.getSubject();

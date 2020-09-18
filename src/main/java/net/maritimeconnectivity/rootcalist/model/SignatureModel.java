@@ -36,21 +36,21 @@ public abstract class SignatureModel extends TimestampModel {
             required = true
     )
     @Column(name = "signature", nullable = false)
-    private String signature;
+    protected String signature;
 
     @ApiModelProperty(
             value = "The identifier of the algorithm that was used to generate the signature",
             required = true
     )
     @Column(name = "algorithm", nullable = false)
-    private String algorithmIdentifier;
+    protected String algorithmIdentifier;
 
     @ManyToOne
     @JoinColumn(name = "id_root_ca")
     @JsonIgnore
-    private RootCA rootCA;
+    protected RootCA rootCA;
 
     @ManyToOne
     @JoinColumn(name = "id_attestor")
-    private Attestor attestor;
+    protected Attestor attestor;
 }

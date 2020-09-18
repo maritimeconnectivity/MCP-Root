@@ -17,8 +17,16 @@
 package net.maritimeconnectivity.rootcalist.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import net.maritimeconnectivity.rootcalist.model.Attestation;
+import net.maritimeconnectivity.rootcalist.model.Attestor;
 import net.maritimeconnectivity.rootcalist.model.Revocation;
+import net.maritimeconnectivity.rootcalist.model.RevocationRequest;
+import net.maritimeconnectivity.rootcalist.model.RootCA;
+import net.maritimeconnectivity.rootcalist.services.AttestationService;
+import net.maritimeconnectivity.rootcalist.services.AttestorService;
 import net.maritimeconnectivity.rootcalist.services.RevocationService;
+import net.maritimeconnectivity.rootcalist.services.RootCAService;
+import net.maritimeconnectivity.rootcalist.utils.CryptoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +38,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
+import java.security.cert.CertificateException;
 import java.util.List;
 
 @Slf4j
@@ -38,10 +52,28 @@ import java.util.List;
 public class RevocationController {
 
     private RevocationService revocationService;
+    private AttestationService attestationService;
+    private RootCAService rootCAService;
+    private AttestorService attestorService;
 
     @Autowired
     public void setRevocationService(RevocationService revocationService) {
         this.revocationService = revocationService;
+    }
+
+    @Autowired
+    public void setAttestationService(AttestationService attestationService) {
+        this.attestationService = attestationService;
+    }
+
+    @Autowired
+    public void setRootCAService(RootCAService rootCAService) {
+        this.rootCAService = rootCAService;
+    }
+
+    @Autowired
+    public void setAttestorService(AttestorService attestorService) {
+        this.attestorService = attestorService;
     }
 
     @GetMapping(
@@ -70,9 +102,25 @@ public class RevocationController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Revocation> createRevocation(@RequestBody Revocation input) {
-        if (input.getAttestor().getId() != null && input.getAttestation() != null && input.getRootCA().getId() != null) {
-
+    public ResponseEntity<Revocation> createRevocation(@RequestBody RevocationRequest input) {
+        if (input.getAttestorId() != null && input.getRootCAid() != null && input.getAttestationId() != null) {
+            Attestor attestor = this.attestorService.getById(input.getAttestorId());
+            Attestation attestation = this.attestationService.getById(input.getAttestationId());
+            RootCA rootCA = this.rootCAService.getById(input.getRootCAid());
+            if (attestation != null && attestation.getRootCA().equals(rootCA) && attestation.getAttestor().equals(attestor)) {
+                try {
+                    if (CryptoUtil.isSignatureValid(input.getSignature(), input.getAlgorithmIdentifier(), attestor, attestation.getSignature())) {
+                        Revocation temp = new Revocation(input);
+                        temp.setAttestation(attestation);
+                        temp.setAttestor(attestor);
+                        temp.setRootCA(rootCA);
+                        Revocation newRevocation = this.revocationService.save(temp);
+                        return new ResponseEntity<>(newRevocation, HttpStatus.OK);
+                    }
+                } catch (IOException | SignatureException | InvalidKeyException | CertificateException | NoSuchAlgorithmException | NoSuchProviderException e) {
+                    log.error("Signature could not be verified", e);
+                }
+            }
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

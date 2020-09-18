@@ -20,7 +20,7 @@ CREATE TABLE `root_ca` (
     `created_at` DATETIME NOT NULL,
     `certificate` MEDIUMTEXT NOT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE (`name`)
+    UNIQUE KEY (`name`)
 );
 
 CREATE TABLE `attestor` (
@@ -30,7 +30,7 @@ CREATE TABLE `attestor` (
     `certificate` MEDIUMTEXT NOT NULL,
     `issuer` MEDIUMTEXT,
     PRIMARY KEY (`id`),
-    UNIQUE (`name`)
+    UNIQUE KEY (`name`)
 );
 
 CREATE TABLE `attestation` (
@@ -42,7 +42,8 @@ CREATE TABLE `attestation` (
     `created_at` DATETIME NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`id_root_ca`) REFERENCES root_ca(`id`),
-    FOREIGN KEY (`id_attestor`) REFERENCES attestor(`id`)
+    FOREIGN KEY (`id_attestor`) REFERENCES attestor(`id`),
+    UNIQUE KEY (`id_attestor`, `id_root_ca`)
 );
 
 CREATE TABLE `revocation` (
@@ -56,5 +57,6 @@ CREATE TABLE `revocation` (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`id_root_ca`) REFERENCES root_ca(`id`),
     FOREIGN KEY (`id_attestor`) REFERENCES attestor(`id`),
-    FOREIGN KEY (`id_attestation`) REFERENCES attestation(`id`)
+    FOREIGN KEY (`id_attestation`) REFERENCES attestation(`id`),
+    UNIQUE KEY (`id_root_ca`, `id_attestor`, `id_attestation`)
 );

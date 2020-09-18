@@ -16,31 +16,21 @@
 
 package net.maritimeconnectivity.rootcalist.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "revocation")
 @Getter
 @Setter
-public class Revocation extends SignatureModel {
+public class AttestationRequest {
 
-    @OneToOne
-    @JoinColumn(name = "id_attestation")
-    private Attestation attestation;
-
-    public Revocation() {
-        // empty constructor
-    }
-
-    public Revocation(RevocationRequest revocationRequest) {
-        this.signature = revocationRequest.getSignature();
-        this.algorithmIdentifier = revocationRequest.getAlgorithmIdentifier();
-    }
+    @ApiModelProperty(value = "The ID of the attestor making the attestation", required = true)
+    private Long attestorId;
+    @ApiModelProperty(value = "The ID of the root CA being attested", required = true)
+    private Long rootCAid;
+    @ApiModelProperty(value = "The HEX encoded signature that is made by signing the certificate of the root CA" +
+            "with the private key of the attestor", required = true)
+    private String signature;
+    @ApiModelProperty(value = "The algorithm identifier of the signature", required = true)
+    private String algorithmIdentifier;
 }

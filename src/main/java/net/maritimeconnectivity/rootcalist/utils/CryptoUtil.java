@@ -16,21 +16,32 @@
 
 package net.maritimeconnectivity.rootcalist.utils;
 
+import net.maritimeconnectivity.rootcalist.model.EntityModel;
 import org.bouncycastle.cert.CertException;
 import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cert.jcajce.JcaX509ContentVerifierProviderBuilder;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.util.encoders.HexEncoder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class CertificateUtil {
+public class CryptoUtil {
 
-    private CertificateUtil() {
+    private CryptoUtil() {
 
     }
 
@@ -58,7 +69,9 @@ public class CertificateUtil {
             if (!certificateHolder.isValidOn(today) || !issuer.isValidOn(today)) {
                 throw new CertException("One or several certificates in chain have expired!");
             }
-            certificateHolder.isSignatureValid(contentVerifierProviderBuilder.build(issuer));
+            if (!certificateHolder.isSignatureValid(contentVerifierProviderBuilder.build(issuer))) {
+                throw new CertException("The chain could not be verified");
+            }
         }
     }
 
@@ -74,5 +87,23 @@ public class CertificateUtil {
             }
         }
         return false;
+    }
+
+    // checks if a signature is valid given the signer and the content that has been signed
+    public static boolean isSignatureValid(String signatureString, String algorithmIdentifier, EntityModel signer, String original)
+            throws IOException, NoSuchProviderException, NoSuchAlgorithmException, CertificateException,
+            InvalidKeyException, SignatureException {
+        HexEncoder hexEncoder = new HexEncoder();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        hexEncoder.decode(signatureString, outputStream);
+        byte[] rawSignature = outputStream.toByteArray();
+        Signature signature = Signature.getInstance(algorithmIdentifier, "BC");
+        PEMParser pemParser = new PEMParser(new StringReader(signer.getCertificate()));
+        X509CertificateHolder certificateHolder = (X509CertificateHolder) pemParser.readObject();
+        pemParser.close();
+        X509Certificate certificate = new JcaX509CertificateConverter().setProvider("BC").getCertificate(certificateHolder);
+        signature.initVerify(certificate);
+        signature.update(original.getBytes());
+        return signature.verify(rawSignature);
     }
 }

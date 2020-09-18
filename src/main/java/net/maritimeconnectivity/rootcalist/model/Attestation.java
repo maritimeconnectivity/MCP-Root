@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -27,5 +28,17 @@ import javax.persistence.Table;
 @Getter
 @Setter
 public class Attestation extends SignatureModel {
+
+    @OneToOne(mappedBy = "attestation")
+    private Revocation revocation;
+
+    public Attestation() {
+        // empty constructor
+    }
+
+    public Attestation(AttestationRequest attestationRequest) {
+        this.signature = attestationRequest.getSignature();
+        this.algorithmIdentifier = attestationRequest.getAlgorithmIdentifier();
+    }
 
 }
