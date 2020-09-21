@@ -22,15 +22,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RevocationRequest {
+public class RevocationRequest implements JsonSerializable {
 
     @ApiModelProperty(value = "The ID of the attestor making the attestation", required = true)
     private Long attestorId;
-    @ApiModelProperty(value = "The ID of the root CA being attested", required = true)
+    @ApiModelProperty(value = "The ID of the root CA being revoked", required = true)
     private Long rootCAid;
-    @ApiModelProperty(value = "The ID of the attestation that this being revoked", required = true)
+    @ApiModelProperty(value = "The ID of the attestation that is being revoked", required = true)
     private Long attestationId;
-    @ApiModelProperty(value = "The HEX encoded signature that is made by signing the certificate of the root CA" +
+    @ApiModelProperty(value = "The HEX encoded signature that is made by signing the original attestation signature of the root CA" +
             "with the private key of the attestor", required = true)
     private String signature;
     @ApiModelProperty(value = "The algorithm identifier of the signature", required = true)

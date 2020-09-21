@@ -103,7 +103,9 @@ public class CryptoUtil {
         pemParser.close();
         X509Certificate certificate = new JcaX509CertificateConverter().setProvider("BC").getCertificate(certificateHolder);
         signature.initVerify(certificate);
-        signature.update(original.getBytes());
-        return signature.verify(rawSignature);
+        byte[] rawOriginal = original.getBytes("UTF-8");
+        signature.update(original.getBytes("UTF-8"));
+        boolean isValid = signature.verify(rawSignature);
+        return isValid;
     }
 }

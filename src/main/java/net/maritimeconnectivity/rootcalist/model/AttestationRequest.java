@@ -19,10 +19,12 @@ package net.maritimeconnectivity.rootcalist.model;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
-public class AttestationRequest {
+@ToString
+public class AttestationRequest implements JsonSerializable {
 
     @ApiModelProperty(value = "The ID of the attestor making the attestation", required = true)
     private Long attestorId;

@@ -16,6 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +31,7 @@ import javax.persistence.Table;
 public class Attestation extends SignatureModel {
 
     @OneToOne(mappedBy = "attestation")
+    @JsonIgnoreProperties("attestation")
     private Revocation revocation;
 
     public Attestation() {

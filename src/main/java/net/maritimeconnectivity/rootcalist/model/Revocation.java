@@ -16,12 +16,12 @@
 
 package net.maritimeconnectivity.rootcalist.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -33,6 +33,7 @@ public class Revocation extends SignatureModel {
 
     @OneToOne
     @JoinColumn(name = "id_attestation")
+    @JsonIgnoreProperties("revocation")
     private Attestation attestation;
 
     public Revocation() {
