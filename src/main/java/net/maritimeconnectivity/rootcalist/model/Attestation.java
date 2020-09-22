@@ -43,4 +43,15 @@ public class Attestation extends SignatureModel {
         this.algorithmIdentifier = attestationRequest.getAlgorithmIdentifier();
     }
 
+    @JsonIgnoreProperties("attestations")
+    @Override
+    public RootCA getRootCA() {
+        return super.getRootCA();
+    }
+
+    @JsonIgnoreProperties("attestations")
+    @Override
+    public Attestor getAttestor() {
+        return super.getAttestor();
+    }
 }

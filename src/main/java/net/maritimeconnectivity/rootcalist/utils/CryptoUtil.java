@@ -16,6 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import net.maritimeconnectivity.rootcalist.model.EntityModel;
 import org.bouncycastle.cert.CertException;
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -28,7 +29,10 @@ import org.bouncycastle.util.encoders.HexEncoder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Signature;
@@ -39,6 +43,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+@Slf4j
 public class CryptoUtil {
 
     private CryptoUtil() {
@@ -103,9 +110,8 @@ public class CryptoUtil {
         pemParser.close();
         X509Certificate certificate = new JcaX509CertificateConverter().setProvider("BC").getCertificate(certificateHolder);
         signature.initVerify(certificate);
-        byte[] rawOriginal = original.getBytes("UTF-8");
-        signature.update(original.getBytes("UTF-8"));
-        boolean isValid = signature.verify(rawSignature);
-        return isValid;
+        byte[] rawOriginal = original.getBytes(UTF_8);
+        signature.update(rawOriginal);
+        return signature.verify(rawSignature);
     }
 }

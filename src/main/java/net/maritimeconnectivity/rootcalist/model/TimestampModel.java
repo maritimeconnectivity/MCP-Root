@@ -16,8 +16,9 @@
 
 package net.maritimeconnectivity.rootcalist.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -29,6 +30,7 @@ import java.util.Date;
 
 @MappedSuperclass
 @Getter
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public abstract class TimestampModel implements JsonSerializable {
 
     @Id

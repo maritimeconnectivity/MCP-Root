@@ -32,7 +32,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class SignatureModel extends TimestampModel {
 
     @ApiModelProperty(
-            value = "HEX encoded signature signed by private key of attestor",
+            value = "HEX encoded signature signed with the private key of the attestor",
             required = true
     )
     @Column(name = "signature", nullable = false)
@@ -47,7 +47,6 @@ public abstract class SignatureModel extends TimestampModel {
 
     @ManyToOne
     @JoinColumn(name = "id_root_ca")
-    @JsonIgnore
     protected RootCA rootCA;
 
     @ManyToOne

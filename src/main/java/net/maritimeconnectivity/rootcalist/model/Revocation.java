@@ -44,4 +44,16 @@ public class Revocation extends SignatureModel {
         this.signature = revocationRequest.getSignature();
         this.algorithmIdentifier = revocationRequest.getAlgorithmIdentifier();
     }
+
+    @JsonIgnoreProperties("revocations")
+    @Override
+    public RootCA getRootCA() {
+        return super.getRootCA();
+    }
+
+    @JsonIgnoreProperties("revocations")
+    @Override
+    public Attestor getAttestor() {
+        return super.getAttestor();
+    }
 }
