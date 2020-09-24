@@ -99,8 +99,6 @@ public class AttestationController {
             Attestor attestor = this.attestorService.getById(input.getAttestorId());
             RootCA rootCA = this.rootCAService.getById(input.getRootCAid());
             if (attestor != null && rootCA != null && input.getSignature() != null && input.getAlgorithmIdentifier() != null) {
-                log.info("Got here!");
-                log.info(rootCA.getCertificate());
                 try {
                     if (CryptoUtil.isSignatureValid(input.getSignature(), input.getAlgorithmIdentifier(), attestor, rootCA.getCertificate())) {
                         Attestation temp = new Attestation(input);
@@ -114,8 +112,6 @@ public class AttestationController {
                 }
             }
         }
-        log.error("Attestor: " + input.getAttestorId());
-        log.error("RootCA: " + input.getRootCAid());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

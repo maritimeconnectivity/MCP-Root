@@ -100,6 +100,7 @@ public class AttestorController {
                 attestor.setIssuer(stringWriter.toString());
                 stringWriter.flush();
             } catch (CertException | OperatorCreationException | IOException e) {
+                log.error("Could not verify certificate", e);
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
@@ -114,6 +115,7 @@ public class AttestorController {
             String cnString = IETFUtils.valueToString(cn.getFirst().getValue());
             attestor.setName(cnString);
         } catch (IOException e) {
+            log.error("Could not write certificate", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         Attestor newAttestor = this.attestorService.save(attestor);
