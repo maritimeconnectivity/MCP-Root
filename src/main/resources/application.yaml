@@ -1,4 +1,5 @@
 spring:
+  jackson.date-format: com.fasterxml.jackson.databind.util.StdDateFormat
   datasource:
     #url: jdbc:mariadb://localhost/root-ca-list
     url: jdbc:mysql://localhost/root-ca-list?serverTimezone=UTC

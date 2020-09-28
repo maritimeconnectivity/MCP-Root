@@ -17,6 +17,7 @@
 package net.maritimeconnectivity.rootcalist.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import net.maritimeconnectivity.rootcalist.model.Attestation;
 import net.maritimeconnectivity.rootcalist.model.RootCA;
 import net.maritimeconnectivity.rootcalist.services.RootCAService;
 import net.maritimeconnectivity.rootcalist.utils.CryptoUtil;
@@ -40,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -61,7 +63,9 @@ public class RootCAController {
     )
     public ResponseEntity<List<RootCA>> getRootCAs(@RequestParam(required = false, name = "attestorId") List<Long> attestorIds) {
         if (attestorIds != null) {
-            return new ResponseEntity<>(this.rootCAService.listByAttestors(attestorIds), HttpStatus.OK);
+            List<RootCA> rootCAS = this.rootCAService.listByAttestors(attestorIds);
+            //List<Attestation> attestations = new ArrayList<>(rootCAS.get(0).getAttestations());
+            return new ResponseEntity<>(rootCAS, HttpStatus.OK);
         }
         return new ResponseEntity<>(this.rootCAService.listAll(), HttpStatus.OK);
     }

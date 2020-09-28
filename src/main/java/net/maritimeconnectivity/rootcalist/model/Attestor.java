@@ -16,7 +16,6 @@
 
 package net.maritimeconnectivity.rootcalist.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,11 +33,9 @@ import java.util.Set;
 public class Attestor extends EntityModel {
 
     @OneToMany(mappedBy = "attestor")
-    @JsonIgnore
     private Set<Attestation> attestations;
 
     @OneToMany(mappedBy = "attestor")
-    @JsonIgnore
     private Set<Revocation> revocations;
 
     @ApiModelProperty(value = "The CA that has issued the certificate of this attestor")

@@ -16,7 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,10 +32,10 @@ import java.util.Set;
 public class RootCA extends EntityModel {
 
     @OneToMany(mappedBy = "rootCA")
-    @JsonIgnoreProperties("rootCA")
+    @JsonIgnore
     private Set<Attestation> attestations;
 
     @OneToMany(mappedBy = "rootCA")
-    @JsonIgnoreProperties("rootCA")
+    @JsonIgnore
     private Set<Revocation> revocations;
 }

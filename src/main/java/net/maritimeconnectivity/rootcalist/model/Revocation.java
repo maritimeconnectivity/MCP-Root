@@ -16,7 +16,6 @@
 
 package net.maritimeconnectivity.rootcalist.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,7 +32,6 @@ public class Revocation extends SignatureModel {
 
     @OneToOne
     @JoinColumn(name = "id_attestation")
-    @JsonIgnoreProperties("revocation")
     private Attestation attestation;
 
     public Revocation() {
@@ -43,17 +41,5 @@ public class Revocation extends SignatureModel {
     public Revocation(RevocationRequest revocationRequest) {
         this.signature = revocationRequest.getSignature();
         this.algorithmIdentifier = revocationRequest.getAlgorithmIdentifier();
-    }
-
-    @JsonIgnoreProperties("revocations")
-    @Override
-    public RootCA getRootCA() {
-        return super.getRootCA();
-    }
-
-    @JsonIgnoreProperties("revocations")
-    @Override
-    public Attestor getAttestor() {
-        return super.getAttestor();
     }
 }
