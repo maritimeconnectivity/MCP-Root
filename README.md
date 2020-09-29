@@ -30,3 +30,7 @@ java -jar target/root-ca-list-0.0.1-SNAPSHOT.war
 ```
 
 If using an IDE like Eclipse or IntelliJ the main() function can also be run directly. 
+
+## API
+When running the application both a Swagger 2 API and an OpenAPI 3 API will be generated. 
+The Swagger 2 definition can be gotten on http://localhost:8080/v2/api-docs, and the OpenAPI 3 definition can be gotten on http://localhost:8080/v3/api-docs. 
