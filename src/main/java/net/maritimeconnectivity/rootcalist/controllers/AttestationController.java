@@ -16,6 +16,8 @@
 
 package net.maritimeconnectivity.rootcalist.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import net.maritimeconnectivity.rootcalist.model.database.Attestation;
 import net.maritimeconnectivity.rootcalist.model.AttestationRequest;
@@ -72,6 +74,9 @@ public class AttestationController {
             value = "/attestations",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @Operation(
+            description = "Gets the list of all attestations."
+    )
     public ResponseEntity<List<Attestation>> getAttestations() {
         List<Attestation> attestations = this.attestationService.listAll();
         return new ResponseEntity<>(attestations, HttpStatus.OK);
@@ -81,7 +86,10 @@ public class AttestationController {
             value = "/attestation/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Attestation> getAttestation(@PathVariable Long id) {
+    @Operation(
+            description = "Gets a specific attestation based on the given ID."
+    )
+    public ResponseEntity<Attestation> getAttestation(@PathVariable @Parameter(description = "The ID of the attestation") Long id) {
         Attestation attestation = this.attestationService.getById(id);
         if (attestation != null) {
             return new ResponseEntity<>(attestation, HttpStatus.OK);
@@ -93,6 +101,9 @@ public class AttestationController {
             value = "/attestation",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(
+            description = "Creates a new attestation of a specified root CA by a specified attestor."
     )
     public ResponseEntity<Attestation> createAttestation(@RequestBody AttestationRequest input) {
         if (input.getAttestorId() != null && input.getRootCAid() != null) {

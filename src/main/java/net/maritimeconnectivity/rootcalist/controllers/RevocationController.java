@@ -16,6 +16,8 @@
 
 package net.maritimeconnectivity.rootcalist.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import net.maritimeconnectivity.rootcalist.model.database.Attestation;
 import net.maritimeconnectivity.rootcalist.model.database.Attestor;
@@ -80,6 +82,9 @@ public class RevocationController {
             value = "/revocations",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @Operation(
+            description = "Gets the list of all revocations."
+    )
     public ResponseEntity<List<Revocation>> getRevocations() {
         List<Revocation> revocations = this.revocationService.listAll();
         return new ResponseEntity<>(revocations, HttpStatus.OK);
@@ -89,7 +94,10 @@ public class RevocationController {
             value = "/revocation/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Revocation> getRevocation(@PathVariable Long id) {
+    @Operation(
+            description = "Gets a specific revocation based on the given ID."
+    )
+    public ResponseEntity<Revocation> getRevocation(@PathVariable @Parameter(description = "The ID of the revocation") Long id) {
         Revocation revocation = this.revocationService.getById(id);
         if (revocation == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -101,6 +109,9 @@ public class RevocationController {
             value = "/revocation",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(
+            description = "Creates a new revocation of a previous attestation."
     )
     public ResponseEntity<Revocation> createRevocation(@RequestBody RevocationRequest input) {
         if (input.getAttestorId() != null && input.getRootCAid() != null && input.getAttestationId() != null) {

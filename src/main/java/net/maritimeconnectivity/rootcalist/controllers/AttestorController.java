@@ -16,6 +16,8 @@
 
 package net.maritimeconnectivity.rootcalist.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import net.maritimeconnectivity.rootcalist.model.database.Attestor;
 import net.maritimeconnectivity.rootcalist.services.AttestorService;
@@ -60,6 +62,9 @@ public class AttestorController {
             value = "/attestors",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @Operation(
+            description = "Gets the list of all attestors."
+    )
     public ResponseEntity<List<Attestor>> getAttestors() {
         List<Attestor> attestors = this.attestorService.listAll();
         return new ResponseEntity<>(attestors, HttpStatus.OK);
@@ -69,7 +74,10 @@ public class AttestorController {
             value = "/attestor/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Attestor> getAttestor(@PathVariable Long id) {
+    @Operation(
+            description = "Gets a specific attestor based on the given ID."
+    )
+    public ResponseEntity<Attestor> getAttestor(@PathVariable @Parameter(description = "The ID of the attestor") Long id) {
         Attestor attestor = this.attestorService.getById(id);
         if (attestor != null) {
             return new ResponseEntity<>(attestor, HttpStatus.OK);
@@ -81,6 +89,11 @@ public class AttestorController {
             value = "/attestor",
             consumes = "application/pem-certificate-chain",
             produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(
+            description = "Creates a new attestor. The body of the request must contain a PEM certificate chain " +
+                    "consisting of either only the certificate of the attestor or the same followed by the remaining " +
+                    "trust chain of the certificate."
     )
     public ResponseEntity<Attestor> createAttestor(@RequestBody String certChain) {
         X509CertificateHolder[] certificateHolders;

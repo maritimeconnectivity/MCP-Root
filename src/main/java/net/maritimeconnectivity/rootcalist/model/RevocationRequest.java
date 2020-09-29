@@ -30,7 +30,7 @@ public class RevocationRequest implements JsonSerializable {
     private Long rootCAid;
     @ApiModelProperty(value = "The ID of the attestation that is being revoked", required = true)
     private Long attestationId;
-    @ApiModelProperty(value = "The HEX encoded signature that is made by signing the original attestation signature of the root CA" +
+    @ApiModelProperty(value = "The HEX encoded signature that is made by signing the original attestation signature of the root CA " +
             "with the private key of the attestor", required = true)
     private String signature;
     @ApiModelProperty(value = "The algorithm identifier of the signature", required = true)

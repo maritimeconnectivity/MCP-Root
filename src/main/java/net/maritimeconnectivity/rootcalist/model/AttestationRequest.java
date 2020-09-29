@@ -30,7 +30,7 @@ public class AttestationRequest implements JsonSerializable {
     private Long attestorId;
     @ApiModelProperty(value = "The ID of the root CA being attested", required = true)
     private Long rootCAid;
-    @ApiModelProperty(value = "The HEX encoded signature that is made by signing the certificate of the root CA" +
+    @ApiModelProperty(value = "The HEX encoded signature that is made by signing the certificate of the root CA " +
             "with the private key of the attestor", required = true)
     private String signature;
     @ApiModelProperty(value = "The algorithm identifier of the signature", required = true)

@@ -16,6 +16,8 @@
 
 package net.maritimeconnectivity.rootcalist.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import net.maritimeconnectivity.rootcalist.model.database.RootCA;
 import net.maritimeconnectivity.rootcalist.services.RootCAService;
@@ -59,10 +61,13 @@ public class RootCAController {
             value = "/roots",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<RootCA>> getRootCAs(@RequestParam(required = false, name = "attestorId") List<Long> attestorIds) {
+    @Operation(
+            description = "Gets the list of root CAs. Can also be used to get only root CAs that are attested by " +
+                    "specific attestors using the attestorId query parameter."
+    )
+    public ResponseEntity<List<RootCA>> getRootCAs(@RequestParam(required = false, name = "attestorId") @Parameter(description = "The ID of an attestor") List<Long> attestorIds) {
         if (attestorIds != null) {
             List<RootCA> rootCAS = this.rootCAService.listByAttestors(attestorIds);
-            //List<Attestation> attestations = new ArrayList<>(rootCAS.get(0).getAttestations());
             return new ResponseEntity<>(rootCAS, HttpStatus.OK);
         }
         return new ResponseEntity<>(this.rootCAService.listAll(), HttpStatus.OK);
@@ -72,7 +77,10 @@ public class RootCAController {
             value = "/root/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<RootCA> getRootCA(@PathVariable Long id) {
+    @Operation(
+            description = "Gets a specific root CA based on it ID."
+    )
+    public ResponseEntity<RootCA> getRootCA(@PathVariable @Parameter(description = "The ID of the requested root CA") Long id) {
         RootCA rootCA = this.rootCAService.getById(id);
         if (rootCA != null) {
             return new ResponseEntity<>(rootCA, HttpStatus.OK);
@@ -84,6 +92,10 @@ public class RootCAController {
             value = "/root",
             consumes = "application/x-pem-file",
             produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(
+            description = "Creates a new root CA. The root CA certificate must be sent in PEM format in the body of " +
+                    "the request."
     )
     public ResponseEntity<RootCA> createRootCA(@RequestBody String rootCACert) {
         PEMParser pemParser = new PEMParser(new StringReader(rootCACert));
