@@ -17,8 +17,7 @@
 package net.maritimeconnectivity.rootcalist.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import net.maritimeconnectivity.rootcalist.model.Attestation;
-import net.maritimeconnectivity.rootcalist.model.RootCA;
+import net.maritimeconnectivity.rootcalist.model.database.RootCA;
 import net.maritimeconnectivity.rootcalist.services.RootCAService;
 import net.maritimeconnectivity.rootcalist.utils.CryptoUtil;
 import org.bouncycastle.asn1.x500.RDN;
@@ -41,7 +40,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

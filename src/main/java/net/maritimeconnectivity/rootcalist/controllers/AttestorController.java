@@ -17,7 +17,7 @@
 package net.maritimeconnectivity.rootcalist.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import net.maritimeconnectivity.rootcalist.model.Attestor;
+import net.maritimeconnectivity.rootcalist.model.database.Attestor;
 import net.maritimeconnectivity.rootcalist.services.AttestorService;
 import net.maritimeconnectivity.rootcalist.utils.CryptoUtil;
 import org.bouncycastle.asn1.x500.RDN;

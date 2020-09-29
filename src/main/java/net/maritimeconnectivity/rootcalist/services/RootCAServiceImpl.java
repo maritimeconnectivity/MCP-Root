@@ -16,7 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.services;
 
-import net.maritimeconnectivity.rootcalist.model.RootCA;
+import net.maritimeconnectivity.rootcalist.model.database.RootCA;
 import net.maritimeconnectivity.rootcalist.repositories.RootCARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

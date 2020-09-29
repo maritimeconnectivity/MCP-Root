@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package net.maritimeconnectivity.rootcalist.model;
+package net.maritimeconnectivity.rootcalist.model.database;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
+import net.maritimeconnectivity.rootcalist.model.JsonSerializable;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

@@ -16,7 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.repositories;
 
-import net.maritimeconnectivity.rootcalist.model.EntityModel;
+import net.maritimeconnectivity.rootcalist.model.database.EntityModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.NoRepositoryBean;

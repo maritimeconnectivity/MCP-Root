@@ -16,7 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.services;
 
-import net.maritimeconnectivity.rootcalist.model.Attestation;
+import net.maritimeconnectivity.rootcalist.model.database.Attestation;
 
 public interface AttestationService extends BaseService<Attestation> {
 }

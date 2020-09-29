@@ -17,11 +17,11 @@
 package net.maritimeconnectivity.rootcalist.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import net.maritimeconnectivity.rootcalist.model.Attestation;
-import net.maritimeconnectivity.rootcalist.model.Attestor;
-import net.maritimeconnectivity.rootcalist.model.Revocation;
+import net.maritimeconnectivity.rootcalist.model.database.Attestation;
+import net.maritimeconnectivity.rootcalist.model.database.Attestor;
+import net.maritimeconnectivity.rootcalist.model.database.Revocation;
 import net.maritimeconnectivity.rootcalist.model.RevocationRequest;
-import net.maritimeconnectivity.rootcalist.model.RootCA;
+import net.maritimeconnectivity.rootcalist.model.database.RootCA;
 import net.maritimeconnectivity.rootcalist.services.AttestationService;
 import net.maritimeconnectivity.rootcalist.services.AttestorService;
 import net.maritimeconnectivity.rootcalist.services.RevocationService;

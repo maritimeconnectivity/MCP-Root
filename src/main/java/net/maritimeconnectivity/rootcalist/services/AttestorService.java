@@ -16,7 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.services;
 
-import net.maritimeconnectivity.rootcalist.model.Attestor;
+import net.maritimeconnectivity.rootcalist.model.database.Attestor;
 
 public interface AttestorService extends BaseService<Attestor> {
 }

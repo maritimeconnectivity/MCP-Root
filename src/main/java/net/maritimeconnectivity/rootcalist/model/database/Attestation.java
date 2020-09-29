@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 
-package net.maritimeconnectivity.rootcalist.model;
+package net.maritimeconnectivity.rootcalist.model.database;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import net.maritimeconnectivity.rootcalist.model.AttestationRequest;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.Set;
 
 @Entity
-@Table(name = "root_ca")
+@Table(name = "attestation")
 @Getter
 @Setter
-public class RootCA extends EntityModel {
+public class Attestation extends SignatureModel {
 
-    @OneToMany(mappedBy = "rootCA")
-    @JsonIgnore
-    private Set<Attestation> attestations;
+    @OneToOne(mappedBy = "attestation")
+    private Revocation revocation;
 
-    @OneToMany(mappedBy = "rootCA")
-    @JsonIgnore
-    private Set<Revocation> revocations;
+    public Attestation() {
+        // empty constructor
+    }
+
+    public Attestation(AttestationRequest attestationRequest) {
+        this.signature = attestationRequest.getSignature();
+        this.algorithmIdentifier = attestationRequest.getAlgorithmIdentifier();
+    }
 }

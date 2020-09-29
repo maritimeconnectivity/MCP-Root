@@ -17,7 +17,7 @@
 package net.maritimeconnectivity.rootcalist.services;
 
 import lombok.extern.slf4j.Slf4j;
-import net.maritimeconnectivity.rootcalist.model.TimestampModel;
+import net.maritimeconnectivity.rootcalist.model.database.TimestampModel;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;

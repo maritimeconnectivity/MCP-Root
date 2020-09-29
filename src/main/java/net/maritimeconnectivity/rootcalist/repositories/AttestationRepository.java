@@ -16,7 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.repositories;
 
-import net.maritimeconnectivity.rootcalist.model.Attestation;
+import net.maritimeconnectivity.rootcalist.model.database.Attestation;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface AttestationRepository extends PagingAndSortingRepository<Attestation, Long> {

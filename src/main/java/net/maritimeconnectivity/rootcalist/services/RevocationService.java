@@ -16,7 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.services;
 
-import net.maritimeconnectivity.rootcalist.model.Revocation;
+import net.maritimeconnectivity.rootcalist.model.database.Revocation;
 
 public interface RevocationService extends BaseService<Revocation> {
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.maritimeconnectivity.rootcalist.model;
+package net.maritimeconnectivity.rootcalist.model.database;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

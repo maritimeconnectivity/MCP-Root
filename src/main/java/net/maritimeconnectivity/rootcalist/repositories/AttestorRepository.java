@@ -16,7 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.repositories;
 
-import net.maritimeconnectivity.rootcalist.model.Attestor;
+import net.maritimeconnectivity.rootcalist.model.database.Attestor;
 
 public interface AttestorRepository extends EntityRepository<Attestor> {
 }

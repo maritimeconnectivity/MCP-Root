@@ -14,30 +14,33 @@
  * limitations under the License.
  */
 
-package net.maritimeconnectivity.rootcalist.model;
+package net.maritimeconnectivity.rootcalist.model.database;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.maritimeconnectivity.rootcalist.model.RevocationRequest;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "attestation")
+@Table(name = "revocation")
 @Getter
 @Setter
-public class Attestation extends SignatureModel {
+public class Revocation extends SignatureModel {
 
-    @OneToOne(mappedBy = "attestation")
-    private Revocation revocation;
+    @OneToOne
+    @JoinColumn(name = "id_attestation")
+    private Attestation attestation;
 
-    public Attestation() {
+    public Revocation() {
         // empty constructor
     }
 
-    public Attestation(AttestationRequest attestationRequest) {
-        this.signature = attestationRequest.getSignature();
-        this.algorithmIdentifier = attestationRequest.getAlgorithmIdentifier();
+    public Revocation(RevocationRequest revocationRequest) {
+        this.signature = revocationRequest.getSignature();
+        this.algorithmIdentifier = revocationRequest.getAlgorithmIdentifier();
     }
 }

@@ -14,25 +14,28 @@
  * limitations under the License.
  */
 
-package net.maritimeconnectivity.rootcalist.model;
+package net.maritimeconnectivity.rootcalist.model.database;
 
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.Set;
 
-@MappedSuperclass
+@Entity
+@Table(name = "root_ca")
 @Getter
 @Setter
-public abstract class EntityModel extends TimestampModel {
+public class RootCA extends EntityModel {
 
-    @ApiModelProperty(value = "The name that identifies the entity", required = true)
-    @Column(name = "name", nullable = false, unique = true)
-    protected String name;
+    @OneToMany(mappedBy = "rootCA")
+    @JsonIgnore
+    private Set<Attestation> attestations;
 
-    @ApiModelProperty(value = "PEM encoded certificate of the entity", required = true)
-    @Column(name = "certificate", nullable = false, unique = true)
-    protected String certificate;
+    @OneToMany(mappedBy = "rootCA")
+    @JsonIgnore
+    private Set<Revocation> revocations;
 }

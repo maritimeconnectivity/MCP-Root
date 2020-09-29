@@ -16,7 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.services;
 
-import net.maritimeconnectivity.rootcalist.model.Attestation;
+import net.maritimeconnectivity.rootcalist.model.database.Attestation;
 import net.maritimeconnectivity.rootcalist.repositories.AttestationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

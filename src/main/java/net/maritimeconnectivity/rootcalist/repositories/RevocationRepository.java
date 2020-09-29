@@ -16,7 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.repositories;
 
-import net.maritimeconnectivity.rootcalist.model.Revocation;
+import net.maritimeconnectivity.rootcalist.model.database.Revocation;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface RevocationRepository extends PagingAndSortingRepository<Revocation, Long> {

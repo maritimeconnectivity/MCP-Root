@@ -16,7 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.services;
 
-import net.maritimeconnectivity.rootcalist.model.Revocation;
+import net.maritimeconnectivity.rootcalist.model.database.Revocation;
 import net.maritimeconnectivity.rootcalist.repositories.RevocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

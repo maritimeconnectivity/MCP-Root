@@ -17,7 +17,7 @@
 package net.maritimeconnectivity.rootcalist.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import net.maritimeconnectivity.rootcalist.model.EntityModel;
+import net.maritimeconnectivity.rootcalist.model.database.EntityModel;
 import org.bouncycastle.cert.CertException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;

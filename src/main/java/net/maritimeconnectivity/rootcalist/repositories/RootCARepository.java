@@ -16,7 +16,7 @@
 
 package net.maritimeconnectivity.rootcalist.repositories;
 
-import net.maritimeconnectivity.rootcalist.model.RootCA;
+import net.maritimeconnectivity.rootcalist.model.database.RootCA;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Collection;
