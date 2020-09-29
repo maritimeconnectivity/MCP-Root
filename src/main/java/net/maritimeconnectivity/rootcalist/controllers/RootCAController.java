@@ -78,7 +78,7 @@ public class RootCAController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @Operation(
-            description = "Gets a specific root CA based on it ID."
+            description = "Gets a specific root CA based on its ID."
     )
     public ResponseEntity<RootCA> getRootCA(@PathVariable @Parameter(description = "The ID of the requested root CA") Long id) {
         RootCA rootCA = this.rootCAService.getById(id);
