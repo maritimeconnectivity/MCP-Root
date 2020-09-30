@@ -1,9 +1,9 @@
 # MCC Root CA List Service
 
 ## Setup
-To setup the service you will need to have a running instance of MariaDB or MySQL. 
+To set up the service you will need to have a running instance of MariaDB or MySQL and have Java 8 installed. 
 
-The [setup.sql](setup.sql) file can be used to setup a database and user for the application. 
+The [setup.sql](setup.sql) file can be used to set up a database and user for the application. 
 
 ## Building and Running
 Building the project can either be done using an existing installation of Maven 3+ or using the included Maven wrapper.
