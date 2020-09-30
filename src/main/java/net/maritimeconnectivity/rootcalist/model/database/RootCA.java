@@ -32,7 +32,6 @@ import java.util.Set;
 public class RootCA extends EntityModel {
 
     @OneToMany(mappedBy = "rootCA")
-    @JsonIgnore
     private Set<Attestation> attestations;
 
     @OneToMany(mappedBy = "rootCA")
