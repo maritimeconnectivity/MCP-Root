@@ -99,7 +99,11 @@ public class AttestorController {
         X509CertificateHolder[] certificateHolders;
         try {
             certificateHolders = CryptoUtil.extractCertificates(certChain);
-        } catch (IOException e) {
+            if (certificateHolders.length == 0) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            CryptoUtil.verifyChain(certificateHolders);
+        } catch (IOException | CertException | OperatorCreationException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Attestor attestor = new Attestor();
@@ -107,12 +111,11 @@ public class AttestorController {
         PemWriter pemWriter = new PemWriter(stringWriter);
         if (certificateHolders.length > 1) {
             try {
-                CryptoUtil.verifyChain(certificateHolders);
                 pemWriter.writeObject(new PemObject("CERTIFICATE", certificateHolders[1].getEncoded()));
                 pemWriter.flush();
                 attestor.setIssuer(stringWriter.toString());
                 stringWriter.flush();
-            } catch (CertException | OperatorCreationException | IOException e) {
+            } catch (IOException e) {
                 log.error("Could not verify certificate", e);
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }

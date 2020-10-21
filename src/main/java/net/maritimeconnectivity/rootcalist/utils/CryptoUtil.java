@@ -65,16 +65,24 @@ public class CryptoUtil {
     public static void verifyChain(X509CertificateHolder[] certificateHolders) throws CertException, OperatorCreationException {
         JcaX509ContentVerifierProviderBuilder contentVerifierProviderBuilder = new JcaX509ContentVerifierProviderBuilder();
         contentVerifierProviderBuilder.setProvider("BC");
-        for (int i = 0; i < certificateHolders.length - 1; i++) {
-            X509CertificateHolder certificateHolder = certificateHolders[i];
-            X509CertificateHolder issuer = certificateHolders[i + 1];
+        if (certificateHolders.length > 1) {
+            for (int i = 0; i < certificateHolders.length - 1; i++) {
+                X509CertificateHolder certificateHolder = certificateHolders[i];
+                X509CertificateHolder issuer = certificateHolders[i + 1];
 
-            Date today = new Date();
-            if (!certificateHolder.isValidOn(today) || !issuer.isValidOn(today)) {
-                throw new CertException("One or several certificates in chain have expired!");
+                Date today = new Date();
+                if (!certificateHolder.isValidOn(today) || !issuer.isValidOn(today)) {
+                    throw new CertException("One or several certificates in chain have expired!");
+                }
+                if (!certificateHolder.isSignatureValid(contentVerifierProviderBuilder.build(issuer))) {
+                    throw new CertException("The chain could not be verified");
+                }
             }
-            if (!certificateHolder.isSignatureValid(contentVerifierProviderBuilder.build(issuer))) {
-                throw new CertException("The chain could not be verified");
+        } else if(certificateHolders.length == 1) {
+            X509CertificateHolder certificateHolder = certificateHolders[0];
+            Date today = new Date();
+            if (!certificateHolder.isValidOn(today)) {
+                throw new CertException("One or several certificates in chain have expired!");
             }
         }
     }
