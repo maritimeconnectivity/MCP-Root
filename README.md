@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/oliverhaagh/MCP-Root.svg?branch=master)](https://travis-ci.org/oliverhaagh/MCP-Root)
 # MCC Root CA List Service
 
 ## Setup
