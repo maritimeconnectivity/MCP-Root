@@ -1,0 +1,22 @@
+language: java
+
+jdk:
+  - openjdk8
+
+branches:
+  only:
+    - master
+
+services:
+  - docker
+
+install:
+  - mvn clean install && cp target/root-ca-list-0.0.1-SNAPSHOT.war docker/
+
+before_script:
+  - echo "$DOCKER_PASSWORD" | docker login -u="$DOCKER_USERNAME" --password-stdin
+
+script:
+  - docker build --no-cache -t enav/root-ca-list
+  - docker push enav/root-ca-list
+  - docker logout
