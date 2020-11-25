@@ -1,4 +1,9 @@
 spring:
+  profiles.active: test
+
+---
+spring:
+  profiles: prod
   jackson.date-format: com.fasterxml.jackson.databind.util.StdDateFormat
   datasource:
     #url: jdbc:mariadb://localhost/root-ca-list
@@ -13,3 +18,15 @@ spring:
   jpa:
     properties:
       javax.persistence.validation.mode: none
+
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL;database_to_upper=false;DB_CLOSE_DELAY=-1
+    #url: jdbc:h2:tcp://localhost/~/test;USER=sa;MODE=MySQL
+    driverClassName: org.h2.Driver
+  flyway.enabled: false
+  jpa:
+    properties:
+       javax.persistence.validation.mode: auto
