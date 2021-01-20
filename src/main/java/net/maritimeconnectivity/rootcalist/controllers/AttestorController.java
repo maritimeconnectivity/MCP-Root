@@ -127,6 +127,9 @@ public class AttestorController {
             pemWriter.close();
             stringWriter.flush();
             X500Name x500Name = certificateHolders[0].getSubject();
+            if (x500Name == null || x500Name.getRDNs(BCStyle.CN).length < 1) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
             RDN cn = x500Name.getRDNs(BCStyle.CN)[0];
             String cnString = IETFUtils.valueToString(cn.getFirst().getValue());
             attestor.setName(cnString);

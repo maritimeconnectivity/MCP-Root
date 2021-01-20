@@ -106,11 +106,13 @@ public class RootCAController {
                 RootCA rootCA = new RootCA();
                 rootCA.setCertificate(rootCACert);
                 X500Name x500Name = certificateHolder.getSubject();
-                RDN cn = x500Name.getRDNs(BCStyle.CN)[0];
-                String cnString = IETFUtils.valueToString(cn.getFirst().getValue());
-                rootCA.setName(cnString);
-                RootCA newRootCA = this.rootCAService.save(rootCA);
-                return new ResponseEntity<>(newRootCA, HttpStatus.OK);
+                if (x500Name != null && x500Name.getRDNs(BCStyle.CN).length > 0) {
+                    RDN cn = x500Name.getRDNs(BCStyle.CN)[0];
+                    String cnString = IETFUtils.valueToString(cn.getFirst().getValue());
+                    rootCA.setName(cnString);
+                    RootCA newRootCA = this.rootCAService.save(rootCA);
+                    return new ResponseEntity<>(newRootCA, HttpStatus.OK);
+                }
             }
         } catch (IOException e) {
             log.error("New root CA certificate could not be parsed");
