@@ -19,6 +19,7 @@ package net.maritimeconnectivity.rootcalist.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
+import net.maritimeconnectivity.rootcalist.exception.BasicRestException;
 import net.maritimeconnectivity.rootcalist.model.database.RootCA;
 import net.maritimeconnectivity.rootcalist.services.RootCAService;
 import net.maritimeconnectivity.rootcalist.utils.CryptoUtil;
@@ -29,6 +30,7 @@ import org.bouncycastle.asn1.x500.style.IETFUtils;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.openssl.PEMParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Date;
@@ -97,7 +100,7 @@ public class RootCAController {
             description = "Creates a new root CA. The root CA certificate must be sent in PEM format in the body of " +
                     "the request."
     )
-    public ResponseEntity<RootCA> createRootCA(@RequestBody String rootCACert) {
+    public ResponseEntity<RootCA> createRootCA(HttpServletRequest request, @RequestBody String rootCACert) throws BasicRestException {
         PEMParser pemParser = new PEMParser(new StringReader(rootCACert));
         try {
             X509CertificateHolder certificateHolder = (X509CertificateHolder) pemParser.readObject();
@@ -116,8 +119,11 @@ public class RootCAController {
             }
         } catch (IOException e) {
             log.error("New root CA certificate could not be parsed");
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BasicRestException(HttpStatus.BAD_REQUEST, "The certificate could not be verified", request.getServletPath());
+        } catch (DataIntegrityViolationException e) {
+            log.error("New root CA could not be persisted because it already exists", e);
+            throw new BasicRestException(HttpStatus.BAD_REQUEST, "A root CA with the same certificate already exists", request.getServletPath());
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        throw new BasicRestException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong while creating new Root CA", request.getServletPath());
     }
 }

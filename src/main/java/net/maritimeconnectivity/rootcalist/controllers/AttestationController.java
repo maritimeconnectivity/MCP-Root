@@ -19,8 +19,9 @@ package net.maritimeconnectivity.rootcalist.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
-import net.maritimeconnectivity.rootcalist.model.database.Attestation;
+import net.maritimeconnectivity.rootcalist.exception.BasicRestException;
 import net.maritimeconnectivity.rootcalist.model.AttestationRequest;
+import net.maritimeconnectivity.rootcalist.model.database.Attestation;
 import net.maritimeconnectivity.rootcalist.model.database.Attestor;
 import net.maritimeconnectivity.rootcalist.model.database.RootCA;
 import net.maritimeconnectivity.rootcalist.services.AttestationService;
@@ -28,6 +29,7 @@ import net.maritimeconnectivity.rootcalist.services.AttestorService;
 import net.maritimeconnectivity.rootcalist.services.RootCAService;
 import net.maritimeconnectivity.rootcalist.utils.CryptoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -105,7 +108,7 @@ public class AttestationController {
     @Operation(
             description = "Creates a new attestation of a specified root CA by a specified attestor."
     )
-    public ResponseEntity<Attestation> createAttestation(@RequestBody AttestationRequest input) {
+    public ResponseEntity<Attestation> createAttestation(HttpServletRequest request, @RequestBody AttestationRequest input) throws BasicRestException {
         if (input.getAttestorId() != null && input.getRootCAid() != null) {
             Attestor attestor = this.attestorService.getById(input.getAttestorId());
             RootCA rootCA = this.rootCAService.getById(input.getRootCAid());
@@ -120,9 +123,13 @@ public class AttestationController {
                     }
                 } catch (IOException | SignatureException | InvalidKeyException | CertificateException | NoSuchAlgorithmException | NoSuchProviderException e) {
                     log.error("Signature could not be verified", e);
+                    throw new BasicRestException(HttpStatus.BAD_REQUEST, "The signature of the attestation could not be verified", request.getServletPath());
+                } catch (DataIntegrityViolationException e) {
+                    log.error("Attestation could not be persisted because it already exists", e);
+                    throw new BasicRestException(HttpStatus.BAD_REQUEST, "A similar attestation already exists", request.getServletPath());
                 }
             }
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        throw new BasicRestException(HttpStatus.BAD_REQUEST, "The request did not contain all required attributes", request.getServletPath());
     }
 }

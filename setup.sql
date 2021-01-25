@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-CREATE SCHEMA `root-ca-list`;
+CREATE SCHEMA `root-ca-list` CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
 
 CREATE USER 'dbuser'@'localhost' IDENTIFIED BY 'dbuser';
 

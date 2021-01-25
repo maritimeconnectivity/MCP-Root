@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-package net.maritimeconnectivity.rootcalist.model.database;
+package net.maritimeconnectivity.rootcalist.model;
 
-import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-
-@MappedSuperclass
 @Getter
 @Setter
-public abstract class EntityModel extends TimestampModel {
-
-    @ApiModelProperty(value = "The name that identifies the entity", required = true)
-    @Column(name = "name", nullable = false)
-    protected String name;
-
-    @ApiModelProperty(value = "PEM encoded certificate of the entity", required = true)
-    @Column(name = "certificate", nullable = false, unique = true)
-    protected String certificate;
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+public class ExceptionModel implements JsonSerializable{
+    private long timestamp;
+    private int status;
+    private String error;
+    private String message;
+    private String path;
 }

@@ -19,10 +19,11 @@ package net.maritimeconnectivity.rootcalist.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
+import net.maritimeconnectivity.rootcalist.exception.BasicRestException;
+import net.maritimeconnectivity.rootcalist.model.RevocationRequest;
 import net.maritimeconnectivity.rootcalist.model.database.Attestation;
 import net.maritimeconnectivity.rootcalist.model.database.Attestor;
 import net.maritimeconnectivity.rootcalist.model.database.Revocation;
-import net.maritimeconnectivity.rootcalist.model.RevocationRequest;
 import net.maritimeconnectivity.rootcalist.model.database.RootCA;
 import net.maritimeconnectivity.rootcalist.services.AttestationService;
 import net.maritimeconnectivity.rootcalist.services.AttestorService;
@@ -30,6 +31,7 @@ import net.maritimeconnectivity.rootcalist.services.RevocationService;
 import net.maritimeconnectivity.rootcalist.services.RootCAService;
 import net.maritimeconnectivity.rootcalist.utils.CryptoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -113,7 +116,7 @@ public class RevocationController {
     @Operation(
             description = "Creates a new revocation of a previous attestation."
     )
-    public ResponseEntity<Revocation> createRevocation(@RequestBody RevocationRequest input) {
+    public ResponseEntity<Revocation> createRevocation(HttpServletRequest request, @RequestBody RevocationRequest input) throws BasicRestException {
         if (input.getAttestorId() != null && input.getRootCAid() != null && input.getAttestationId() != null) {
             Attestor attestor = this.attestorService.getById(input.getAttestorId());
             Attestation attestation = this.attestationService.getById(input.getAttestationId());
@@ -130,9 +133,13 @@ public class RevocationController {
                     }
                 } catch (IOException | SignatureException | InvalidKeyException | CertificateException | NoSuchAlgorithmException | NoSuchProviderException e) {
                     log.error("Signature could not be verified", e);
+                    throw new BasicRestException(HttpStatus.BAD_REQUEST, "The signature of the revocation could not be verified", request.getServletPath());
+                } catch (DataIntegrityViolationException e) {
+                    log.error("New revocation could not be persisted because it already exists", e);
+                    throw new BasicRestException(HttpStatus.BAD_REQUEST, "A similar revocation already exists", request.getServletPath());
                 }
             }
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        throw new BasicRestException(HttpStatus.BAD_REQUEST, "The request did not contain all required attributes", request.getServletPath());
     }
 }
