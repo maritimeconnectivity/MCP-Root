@@ -30,6 +30,12 @@ This will generate an executable WAR file in the target folder which can then be
 java -jar target/root-ca-list-0.0.1-SNAPSHOT.war
 ```
 
+NOTE that the default configuration is using an in-memory database which will most likely not work as intended on runtime.
+It is therefore recommended to actually execute the application with the 'prod' profile activated:
+```
+java -Dspring.profiles.active=prod -jar target/root-ca-list-0.0.1-SNAPSHOT.war
+```
+
 If using an IDE like Eclipse or IntelliJ the main() function can also be run directly. 
 
 ## API
