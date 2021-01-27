@@ -18,26 +18,28 @@ CREATE TABLE `root_ca` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
     `created_at` DATETIME NOT NULL,
-    `certificate` MEDIUMTEXT NOT NULL,
+    `certificate` TEXT NOT NULL,
+    `hash` VARCHAR(64) AS (SHA2(REGEXP_REPLACE(`certificate`, '[\r\n\t ]+', ''), 256)),
     PRIMARY KEY (`id`),
-    UNIQUE (`certificate`)
+    UNIQUE (`hash`)
 );
 
 CREATE TABLE `attestor` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
     `created_at` DATETIME NOT NULL,
-    `certificate` MEDIUMTEXT NOT NULL,
+    `certificate` TEXT NOT NULL,
     `issuer` MEDIUMTEXT,
+    `hash` VARCHAR(64) AS (SHA2(REGEXP_REPLACE(`certificate`, '[\r\n\t ]+', ''), 256)),
     PRIMARY KEY (`id`),
-    UNIQUE (`certificate`)
+    UNIQUE (`hash`)
 );
 
 CREATE TABLE `attestation` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `id_root_ca` INT NOT NULL,
     `id_attestor` INT NOT NULL,
-    `signature` MEDIUMTEXT NOT NULL,
+    `signature` TEXT NOT NULL,
     `algorithm` VARCHAR(255),
     `created_at` DATETIME NOT NULL,
     PRIMARY KEY (`id`),
@@ -51,7 +53,7 @@ CREATE TABLE `revocation` (
     `id_root_ca` INT NOT NULL,
     `id_attestor` INT NOT NULL,
     `id_attestation` INT NOT NULL,
-    `signature` MEDIUMTEXT NOT NULL,
+    `signature` TEXT NOT NULL,
     `algorithm` VARCHAR(255),
     `created_at` DATETIME NOT NULL,
     PRIMARY KEY (`id`),
