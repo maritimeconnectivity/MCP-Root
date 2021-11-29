@@ -33,7 +33,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <bouncycastle.version>1.66</bouncycastle.version>
+        <bouncycastle.version>1.67</bouncycastle.version>
     </properties>
 
     <dependencies>
