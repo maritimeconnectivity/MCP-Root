@@ -33,7 +33,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <bouncycastle.version>1.66</bouncycastle.version>
+        <bouncycastle.version>1.69</bouncycastle.version>
     </properties>
 
     <dependencies>
@@ -107,6 +107,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${project.parent.version}</version>
             </plugin>
         </plugins>
     </build>
